@@ -1,0 +1,17 @@
+/*
+  CareerNova — Global stylesheet
+  (Templates use inline styles for self-containment;
+   this file is for any shared overrides.)
+*/
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0d1220; }
+::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #4a5568; }
+
+/* Selection */
+::selection { background: rgba(59,130,246,0.35); }
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }

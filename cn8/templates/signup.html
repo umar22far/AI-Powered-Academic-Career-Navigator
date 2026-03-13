@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerNova — Sign Up</title>
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050810;
+      --surface: #0d1220;
+      --border: rgba(99,179,237,0.15);
+      --accent: #3b82f6;
+      --accent2: #06b6d4;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --danger: #f87171;
+      --success: #34d399;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPan 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gridPan {
+      0%   { background-position: 0 0; }
+      100% { background-position: 60px 60px; }
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    .orb-1 { width: 500px; height: 500px; background: #3b82f6; top: -150px; left: -150px; }
+    .orb-2 { width: 400px; height: 400px; background: #06b6d4; bottom: -100px; right: -100px; }
+    .orb-3 { width: 300px; height: 300px; background: #8b5cf6; top: 40%; left: 60%; }
+
+    .signup-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .signup-card {
+      background: rgba(13,18,32,0.88);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 44px 40px;
+      box-shadow: 0 0 60px rgba(59,130,246,0.08), 0 30px 60px rgba(0,0,0,0.5);
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 32px rgba(59,130,246,0.4);
+    }
+
+    .logo-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #fff 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-bottom: 7px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .required-star { color: #f87171; margin-left: 2px; }
+
+    .input-wrapper { position: relative; }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      pointer-events: none;
+      color: var(--muted);
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(99,179,237,0.2);
+      border-radius: 10px;
+      padding: 12px 14px 12px 42px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input::placeholder { color: #475569; }
+
+    .form-input:focus {
+      border-color: var(--accent);
+      background: rgba(59,130,246,0.06);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    }
+
+    select.form-input {
+      cursor: pointer;
+      appearance: none;
+    }
+
+    .btn-signup {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(59,130,246,0.4);
+      margin-top: 6px;
+    }
+
+    .btn-signup:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 30px rgba(59,130,246,0.5);
+    }
+
+    .btn-signup:active { transform: translateY(0); }
+
+    .alert-error {
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 13px;
+      color: var(--danger);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alert-success {
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.3);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 13px;
+      color: var(--success);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 22px 0;
+    }
+
+    .login-link {
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .login-link a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .login-link a:hover { color: #93c5fd; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #475569;
+      margin: 18px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="signup-wrapper">
+    <div class="signup-card">
+
+      <div class="logo-area">
+        <div class="logo-icon">🚀</div>
+        <div class="logo-title">CareerNova</div>
+        <div class="logo-subtitle">Create your student account</div>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="{% if 'Welcome' in message.tags or message.level == 25 %}alert-success{% else %}alert-error{% endif %}">
+            {% if 'Welcome' in message.tags or message.level == 25 %}✅{% else %}⚠️{% endif %} {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+
+        <!-- Role Selector -->
+        <div class="section-label">I am a</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+          <label style="cursor:pointer">
+            <input type="radio" name="role" value="student" id="role_student" checked style="display:none" onchange="toggleRole()"/>
+            <div class="role-btn" id="btn_student" style="border:1.5px solid var(--accent);background:rgba(59,130,246,0.1);border-radius:12px;padding:14px;text-align:center">
+              <div style="font-size:22px;margin-bottom:4px">🎓</div>
+              <div style="font-size:14px;font-weight:500;color:#e2e8f0">Student</div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px">Access student portal</div>
+            </div>
+          </label>
+          <label style="cursor:pointer">
+            <input type="radio" name="role" value="teacher" id="role_teacher" style="display:none" onchange="toggleRole()"/>
+            <div class="role-btn" id="btn_teacher" style="border:1.5px solid rgba(99,179,237,0.2);border-radius:12px;padding:14px;text-align:center">
+              <div style="font-size:22px;margin-bottom:4px">📋</div>
+              <div style="font-size:14px;font-weight:500;color:#94a3b8">Teacher</div>
+              <div style="font-size:11px;color:#64748b;margin-top:2px">Access teacher dashboard</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Personal Info -->
+        <div class="section-label">Personal info</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="first_name">First name <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <input class="form-input" type="text" id="first_name" name="first_name" placeholder="Arjun" required />
+              <span class="input-icon">👤</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="last_name">Last name</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="text" id="last_name" name="last_name" placeholder="Sharma" />
+              <span class="input-icon">👤</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <div class="input-wrapper">
+            <input class="form-input" type="email" id="email" name="email" placeholder="arjun@college.edu" />
+            <span class="input-icon">📧</span>
+          </div>
+        </div>
+
+        <!-- Student Fields -->
+        <div id="student_fields">
+          <div class="section-label">Academic info</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="roll_number">Roll number <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <input class="form-input" type="text" id="roll_number" name="roll_number" placeholder="CS2021042" />
+                <span class="input-icon">🎓</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="semester">Semester</label>
+              <div class="input-wrapper">
+                <select class="form-input" id="semester" name="semester">
+                  {% for i in "12345678" %}
+                    <option value="{{ i }}">Semester {{ i }}</option>
+                  {% endfor %}
+                </select>
+                <span class="input-icon">📅</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teacher Fields -->
+        <div id="teacher_fields" style="display:none">
+          <div class="section-label">Staff info</div>
+          <div class="form-group">
+            <label class="form-label" for="employee_id">Employee ID <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <input class="form-input" type="text" id="employee_id" name="employee_id" placeholder="TCH2024001" />
+              <span class="input-icon">🪪</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Department (shared) -->
+        <div class="form-group">
+          <label class="form-label" for="department">Department</label>
+          <div class="input-wrapper">
+            <select class="form-input" id="department" name="department">
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electronics & Communication</option>
+              <option>Mechanical Engineering</option>
+              <option>Civil Engineering</option>
+              <option>Electrical Engineering</option>
+            </select>
+            <span class="input-icon">🏛️</span>
+          </div>
+        </div>
+
+        <!-- Account Info -->
+        <div class="section-label">Account credentials</div>
+
+        <div class="form-group">
+          <label class="form-label" for="username">Username <span class="required-star">*</span></label>
+          <div class="input-wrapper">
+            <input class="form-input" type="text" id="username" name="username" placeholder="arjun_sharma" required />
+            <span class="input-icon">🔖</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="password1">Password <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <input class="form-input" type="password" id="password1" name="password1" placeholder="Min 6 characters" required />
+              <span class="input-icon">🔒</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="password2">Confirm password <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <input class="form-input" type="password" id="password2" name="password2" placeholder="Repeat password" required />
+              <span class="input-icon">🔒</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-signup" type="submit">Create Account →</button>
+      </form>
+
+      <hr class="divider" />
+
+      <div class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('first_name').focus();
+
+    function toggleRole() {
+      const isTeacher = document.getElementById('role_teacher').checked;
+      document.getElementById('student_fields').style.display = isTeacher ? 'none' : 'block';
+      document.getElementById('teacher_fields').style.display = isTeacher ? 'block' : 'none';
+
+      const btnS = document.getElementById('btn_student');
+      const btnT = document.getElementById('btn_teacher');
+
+      if (isTeacher) {
+        btnT.style.border = '1.5px solid var(--accent)';
+        btnT.style.background = 'rgba(59,130,246,0.1)';
+        btnT.querySelectorAll('div')[1].style.color = '#e2e8f0';
+        btnS.style.border = '1.5px solid rgba(99,179,237,0.2)';
+        btnS.style.background = 'transparent';
+        btnS.querySelectorAll('div')[1].style.color = '#94a3b8';
+      } else {
+        btnS.style.border = '1.5px solid var(--accent)';
+        btnS.style.background = 'rgba(59,130,246,0.1)';
+        btnS.querySelectorAll('div')[1].style.color = '#e2e8f0';
+        btnT.style.border = '1.5px solid rgba(99,179,237,0.2)';
+        btnT.style.background = 'transparent';
+        btnT.querySelectorAll('div')[1].style.color = '#94a3b8';
+      }
+    }
+
+    // Make the whole card clickable
+    document.getElementById('btn_student').parentElement.addEventListener('click', function() {
+      document.getElementById('role_student').checked = true;
+      toggleRole();
+    });
+    document.getElementById('btn_teacher').parentElement.addEventListener('click', function() {
+      document.getElementById('role_teacher').checked = true;
+      toggleRole();
+    });
+  </script>
+</body>
+</html>

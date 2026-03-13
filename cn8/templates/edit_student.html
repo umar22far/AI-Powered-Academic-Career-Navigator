@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareerNova — Edit Student</title>
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#0d1220;--border:rgba(99,179,237,0.15);--accent:#3b82f6;--text:#e2e8f0;--muted:#64748b;--success:#34d399;--danger:#f87171}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(59,130,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+    .card{position:relative;z-index:10;width:100%;max-width:520px;background:rgba(13,18,32,0.9);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:44px 40px;box-shadow:0 0 60px rgba(59,130,246,0.08)}
+    .header{margin-bottom:32px}
+    .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:20px;transition:color .2s}
+    .back:hover{color:#60a5fa}
+    h1{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;background:linear-gradient(90deg,#fff,#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .student-meta{font-size:13px;color:var(--muted);margin-top:4px}
+    .form-group{margin-bottom:18px}
+    .form-label{display:block;font-size:12px;font-weight:500;color:#94a3b8;margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase}
+    .form-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(99,179,237,0.2);border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+    .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.12)}
+    select.form-input{cursor:pointer;appearance:none}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .btn-save{width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#06b6d4);border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;transition:opacity .2s,transform .15s}
+    .btn-save:hover{opacity:.9;transform:translateY(-1px)}
+    .alert{padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .alert-success{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);color:var(--success)}
+    .alert-error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:var(--danger)}
+    .divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#475569;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+    .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <a href="{% url 'teacher' %}" class="back">← Back to Teacher Dashboard</a>
+
+    <div class="header">
+      <h1>Edit Student Profile</h1>
+      <div class="student-meta">{{ student.user.get_full_name }} · {{ student.roll_number }} · {{ student.department }}</div>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if 'updated' in message.tags or message.level == 25 %}alert-success{% else %}alert-error{% endif %}">
+          {% if message.level == 25 %}✅{% else %}⚠️{% endif %} {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="section-label">Academic info</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">CGPA</label>
+          <input class="form-input" type="number" name="cgpa" value="{{ student.cgpa }}" min="0" max="10" step="0.1" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Attendance (%)</label>
+          <input class="form-input" type="number" name="attendance" value="{{ student.attendance }}" min="0" max="100" step="0.1" required/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Semester</label>
+          <select class="form-input" name="semester">
+            {% for i in "12345678" %}
+              <option value="{{ i }}" {% if student.semester == i|add:"0" %}selected{% endif %}>Semester {{ i }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Risk Level</label>
+          <select class="form-input" name="risk_level">
+            <option value="Low"    {% if student.risk_level == 'Low'    %}selected{% endif %}>Low</option>
+            <option value="Medium" {% if student.risk_level == 'Medium' %}selected{% endif %}>Medium</option>
+            <option value="High"   {% if student.risk_level == 'High'   %}selected{% endif %}>High</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <select class="form-input" name="department">
+          <option {% if student.department == 'Computer Science' %}selected{% endif %}>Computer Science</option>
+          <option {% if student.department == 'Information Technology' %}selected{% endif %}>Information Technology</option>
+          <option {% if student.department == 'Electronics & Communication' %}selected{% endif %}>Electronics & Communication</option>
+          <option {% if student.department == 'Mechanical Engineering' %}selected{% endif %}>Mechanical Engineering</option>
+          <option {% if student.department == 'Civil Engineering' %}selected{% endif %}>Civil Engineering</option>
+          <option {% if student.department == 'Electrical Engineering' %}selected{% endif %}>Electrical Engineering</option>
+        </select>
+      </div>
+
+      <hr class="divider"/>
+      <button class="btn-save" type="submit">Save Changes</button>
+    </form>
+  </div>
+</body>
+</html>
